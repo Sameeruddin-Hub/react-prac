@@ -1,38 +1,37 @@
 import React, { useContext } from 'react'
 import { Plus, Minus, Trash, ArrowRight } from 'lucide-react'
-import { CartData } from '../context/CartContext'
+// import { CartData } from '../context/CartContext'
+import { useSelector, useDispatch } from 'react-redux'
 
 const Cart = () => {
-    let { cartItems, setCartItems } = useContext(CartData)
 
-    const deleteItemFromCart = (id) => {
-        setCartItems((prev) => {
-            return prev.filter((item) => item.id !== id
-            )
-        })
-    }
-    const incQuant = (id) => {
-        setCartItems((prev) => {
-            return prev.map((item) => {
-                if (item.id === id) {
-                    return { ...item, quantity: (item.quantity || 1) + 1 }
-                }
-                return item
-            }
-            )
-        })
-    }
-    const decQuan = (id) => {
-        setCartItems((prev) => {
-            return prev.map((item) => {
-                if (item.id === id) {
-                    return { ...item, quantity: (item.quantity ?? 1) - 1 }
-                }
-                return item
-            })
-                .filter((item) => item.quantity > 0);
-        })
-    }
+    let { cartItems } = useSelector((state) => state.cart)
+    console.log(cartItems)
+    let dispatch = useDispatch()
+    // let { cartItems, setCartItems } = useContext(CartData)
+
+    // const incQuant = (id) => {
+    //     setCartItems((prev) => {
+    //         return prev.map((item) => {
+    //             if (item.id === id) {
+    //                 return { ...item, quantity: (item.quantity || 1) + 1 }
+    //             }
+    //             return item
+    //         }
+    //         )
+    //     })
+    // }
+    // const decQuan = (id) => {
+    //     setCartItems((prev) => {
+    //         return prev.map((item) => {
+    //             if (item.id === id) {
+    //                 return { ...item, quantity: (item.quantity ?? 1) - 1 }
+    //             }
+    //             return item
+    //         })
+    //             .filter((item) => item.quantity > 0);
+    //     })
+    // }
 
     const subTotal = cartItems.reduce((total, item) => total + item.price * (item.quantity || 1), 0)
 
@@ -59,7 +58,7 @@ const Cart = () => {
 
                                 </div>
                                 <div className='flex flex-col p-6 items-end gap-8'>
-                                    <div className='cursor-pointer' onClick={() => { deleteItemFromCart(cartItem.id) }}>
+                                    <div className='cursor-pointer' onClick={() => { dispatch(deleteItemFromCart(cartItem.id)) }}>
                                         <Trash />
                                     </div>
                                     <div className='flex rounded-full border border-gray-400 px-4 py-2 gap-3'>

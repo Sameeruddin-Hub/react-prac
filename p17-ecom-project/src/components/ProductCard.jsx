@@ -1,11 +1,13 @@
 import React, { useContext } from 'react'
-import { CartData } from '../context/CartContext'
+// import { CartData } from '../context/CartContext'
+import { useSelector } from 'react-redux'
 
 
 
 const ProductCard = ({ product, addToCart }) => {
     // console.log(product)
-    let { cartItems, setCartItems } = useContext(CartData)
+    // let { cartItems, setCartItems } = useContext(CartData)
+    let { cartItems } = useSelector((state) => state.cart)
     const isAdded = cartItems.some((item) => item.id === product.id)
 
     return (
@@ -18,7 +20,7 @@ const ProductCard = ({ product, addToCart }) => {
                 <h4 className='text-2xl font-regualr line-clamp-2'> {product.title}</h4>
                 <span className='text-xl '>${product.price}</span>
                 <div>
-                    <button onClick={() => { addToCart(product) }} className='px-4 w-full cursor-pointer py-2 rounded-full border-1 border-slate-400 group-hover:bg-slate-900 group-hover:border-slate-900 group-hover:text-white '>{isAdded ? 'Added to cart' : 'Add to cart'}</button>
+                    <button onClick={() => { addToCart(); console.log('Product added to cart'); }} className='px-4 w-full cursor-pointer py-2 rounded-full border-1 border-slate-400 group-hover:bg-slate-900 group-hover:border-slate-900 group-hover:text-white '>{isAdded ? 'Added to cart' : 'Add to cart'}</button>
 
                 </div>
             </div>

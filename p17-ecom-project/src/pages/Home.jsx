@@ -3,11 +3,15 @@ import Navbar from '../components/Navbar'
 import { Outlet } from "react-router"
 import { axiosInstance } from '../config/axiosInstance'
 import ProductCard from '../components/ProductCard'
-import { CartData } from '../context/CartContext'
+// import { CartData } from '../context/CartContext'
+import { useSelector, useDispatch } from 'react-redux'
+import { addToCart } from '../features/cartSlice'
 const Home = () => {
     const [products, setProducts] = useState([])
     const [isLoading, setIsLoading] = useState(true);
-    let { cartItems, setCartItems } = useContext(CartData)
+    let dispatch = useDispatch();
+    let { cartItems } = useSelector((state) => state.cart)
+
     let getProducts = async () => {
         try {
             let res = await axiosInstance.get('products')
@@ -21,19 +25,19 @@ const Home = () => {
     useEffect(() => {
         getProducts()
     }, [])
-    const addToCart = (item) => {
+    // const addToCart = (item) => {
 
-        setCartItems((prev) => {
-            const isAddedAlready = cartItems.some((currentItem) => currentItem.id === item.id)
+    //     setCartItems((prev) => {
+    //         const isAddedAlready = cartItems.some((currentItem) => currentItem.id === item.id)
 
-            if (isAddedAlready) {
-                return prev
-            }
-            return [...prev, { ...item, quantity: 1, isAdded: true }]
+    //         if (isAddedAlready) {
+    //             return prev
+    //         }
+    //         return [...prev, { ...item, quantity: 1, isAdded: true }]
 
-        }
-        )
-    }
+    //     }
+    //     )
+    // }
     console.log(cartItems, 'added')
     return (
         <>
@@ -54,7 +58,7 @@ const Home = () => {
                         isLoading ? (<div className='text-amber-800 font-geist text-2xl'>Getting you fun products...</div>) :
 
                             (
-                                products.map((product) => <ProductCard addToCart={addToCart} key={product.id} product={product} />)
+                                products.map((product) => <ProductCard addToCart={() => dispatch(addToCart(product))} key={product.id} product={product} />)
                             )
 
                     }

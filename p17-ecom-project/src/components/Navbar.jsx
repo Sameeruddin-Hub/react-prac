@@ -1,8 +1,12 @@
 import React from 'react'
 import { Link, NavLink } from 'react-router'
 import { ShoppingBag } from 'lucide-react'
+import { useSelector, useDispatch } from 'react-redux'
+import { removeUser } from '../features/authSlice'
 
 const Navbar = () => {
+    let dispatch = useDispatch()
+    // let { user } = useSelector((state) => state.auth)
     let navClass = ({ isActive }) => `
     
     ${isActive
@@ -23,7 +27,11 @@ const Navbar = () => {
                 <div>
                     <ShoppingBag />
                 </div>
-                <button className='py-2 px-5 bg-slate-900 rounded-full text-white cursor-pointer'>Logout</button>
+                <button onClick={() => {
+                    dispatch(removeUser())
+                    localStorage.removeItem('loggedUser')
+                    // navigate('/')
+                }} className='py-2 px-5 bg-slate-900 rounded-full text-white cursor-pointer'>Logout</button>
             </div>
         </div >
     )

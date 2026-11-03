@@ -3,27 +3,32 @@ import { Auth } from '../context/AuthContext'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
+import { useDispatch } from 'react-redux'
+import { addUser, removeUser } from '../features/authSlice'
+import { addToCart, removeItemFromCart } from '../features/cartSlice'
+
 
 
 const useAuth = () => {
     let navigate = useNavigate();
+    let dispatch = useDispatch()
     let { register, handleSubmit, reset, getValues, formState: { errors } } = useForm({ mode: 'onChange' });
-    let { setLoggedUser, registeredUsers, loggedUser, setRegisteredUsers } = useContext(Auth);
+    const [registeredUsers, setRegisteredUsers] = useState(JSON.parse(localStorage.getItem('registeredUsers')) || [])
+
+    // let { setLoggedUser, registeredUsers, loggedUser, setRegisteredUsers } = useContext(Auth);
     // console.log(registeredUsers)
     const loginFormData = (data) => {
         // console.log(data)
-        let arr = data;
         let user = registeredUsers.find((val) => {
-            return val.email === arr.email && val.password === arr.password;
+            return val.email === data.email && val.password === data.password;
         })
-        console.log(user)
         if (!user) {
             toast.error('invalid credentials or user not found')
 
             reset()
             return
         }
-        setLoggedUser(user)
+        dispatch(addUser(user))
         localStorage.setItem('loggedUser', JSON.stringify(user))
         toast.success('logged in successfully')
         reset();
@@ -42,7 +47,7 @@ const useAuth = () => {
         let arr = [...registeredUsers, data];
 
         setRegisteredUsers(arr)
-        setLoggedUser(data)
+        // setLoggedUser(data)
         localStorage.setItem('loggedUser', JSON.stringify(data))
         localStorage.setItem('registeredUsers', JSON.stringify(arr))
 
